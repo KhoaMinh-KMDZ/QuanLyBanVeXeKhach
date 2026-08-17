@@ -1,0 +1,327 @@
+<UserControl x:Class="QuanLyBanVeXeKhach.Views.BanVeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:QuanLyBanVeXeKhach.Converters">
+
+    <UserControl.Resources>
+        <converters:GheColorConverter x:Key="GheColorConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Giao diện chính -->
+        <Grid Margin="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ── CỘT TRÁI: Chọn chuyến + Thông tin khách ── -->
+        <StackPanel Grid.Column="0" Margin="0,0,16,0">
+            <!-- Header -->
+            <TextBlock Text="🎫  Bán Vé Xe" FontSize="22" FontWeight="Bold"
+                       Foreground="#1a2f5a" Margin="0,0,0,20"/>
+
+            <!-- Chọn chuyến xe -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="10" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="CHỌN CHUYẾN XE" FontSize="12" FontWeight="Bold"
+                               Foreground="#888" Margin="0,0,0,10"/>
+                    <ComboBox ItemsSource="{Binding DanhSachChuyen}"
+                              SelectedItem="{Binding ChuyenDuocChon}"
+                              DisplayMemberPath="ThongTin"
+                              materialDesign:HintAssist.Hint="Chọn chuyến xe"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              Margin="0,0,0,10"/>
+
+                    <!-- Thông tin chuyến đã chọn -->
+                    <Grid Visibility="{Binding ChuyenDuocChon, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Tuyến:" Foreground="#666" FontSize="13"/>
+                        <TextBlock Grid.Column="1" Text="{Binding ChuyenDuocChon.TenTuyen}" FontWeight="SemiBold" FontSize="13"/>
+                        <TextBlock Grid.Row="1" Text="Xe:" Foreground="#666" FontSize="13"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ChuyenDuocChon.BienSo}" FontWeight="SemiBold" FontSize="13"/>
+                        <TextBlock Grid.Row="2" Text="Giá vé:" Foreground="#666" FontSize="13"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ChuyenDuocChon.GiaVeText}" FontWeight="Bold" Foreground="#388E3C" FontSize="14"/>
+                        <TextBlock Grid.Row="3" Text="Ghế trống:" Foreground="#666" FontSize="13"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ChuyenDuocChon.SoGheTrong}" FontWeight="Bold" Foreground="#F57C00" FontSize="13"/>
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- Thông tin khách hàng -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="10" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="THÔNG TIN KHÁCH HÀNG" FontSize="12" FontWeight="Bold"
+                               Foreground="#888" Margin="0,0,0,10"/>
+                    <TextBox materialDesign:HintAssist.Hint="Số điện thoại (*)"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding SDTKhachHang, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,10"/>
+                    <TextBox materialDesign:HintAssist.Hint="Họ và tên (*)"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding HoTenKhachHang, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,0"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- Tóm tắt vé -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="10" Margin="0,0,0,16"
+                                 Background="#E3F2FD">
+                <StackPanel>
+                    <TextBlock Text="THÔNG TIN VÉ" FontSize="12" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding TomTatVe}" FontSize="15" FontWeight="SemiBold"
+                               Foreground="#1a2f5a" TextWrapping="Wrap"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- Thông báo lỗi -->
+            <TextBlock Text="{Binding ThongBao}" Foreground="#C62828" FontSize="13"
+                       TextWrapping="Wrap" Margin="0,0,0,10"
+                       Visibility="{Binding ThongBao, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+            <!-- Nút Bán Vé -->
+            <Button Command="{Binding BanVeCommand}"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Background="#1a2f5a" Foreground="White" BorderThickness="0"
+                    Height="48" FontSize="15" FontWeight="Bold"
+                    materialDesign:ButtonAssist.CornerRadius="10">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="TicketConfirmation" Width="22" Height="22"
+                                             VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="ĐẶT VÉ" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- ── CỘT PHẢI: Sơ đồ ghế ── -->
+        <materialDesign:Card Grid.Column="1" Padding="0" UniformCornerRadius="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header sơ đồ ghế -->
+                <Border Grid.Row="0" Background="#1a2f5a" CornerRadius="12,12,0,0" Padding="20,14">
+                    <Grid>
+                        <TextBlock Text="SƠ ĐỒ GHẾ XE" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Right"
+                                Command="{Binding LamMoiCommand}"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Foreground="White" Content="⟳ Làm mới" Padding="8,4"/>
+                    </Grid>
+                </Border>
+
+                <!-- Chú thích -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="16,12,16,12" HorizontalAlignment="Center">
+                    <Grid Width="24" Height="26" Margin="0,0,8,0">
+                        <Border Width="18" Height="14" VerticalAlignment="Top" BorderBrush="#BDBDBD" BorderThickness="2" CornerRadius="4"/>
+                        <Border Width="20" Height="8" VerticalAlignment="Bottom" Margin="0,0,0,2" BorderBrush="#BDBDBD" BorderThickness="2" CornerRadius="2"/>
+                    </Grid>
+                    <TextBlock Text="Còn trống" VerticalAlignment="Center" Margin="0,0,24,0" FontSize="13" Foreground="#333"/>
+                    
+
+                    
+                    <Grid Width="24" Height="26" Margin="0,0,8,0">
+                        <Border Width="18" Height="14" VerticalAlignment="Top" BorderBrush="#4CAF50" BorderThickness="2" CornerRadius="4" Background="#4CAF50"/>
+                        <Border Width="20" Height="8" VerticalAlignment="Bottom" Margin="0,0,0,2" BorderBrush="#4CAF50" BorderThickness="2" CornerRadius="2" Background="#4CAF50"/>
+                        <TextBlock Text="✓" FontSize="10" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,3,0,0" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBlock Text="Đang chọn" VerticalAlignment="Center" FontSize="13" Foreground="#333"/>
+                </StackPanel>
+
+                <!-- Lưới ghế (Khung xe bus) -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="16,4,16,16">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        
+                        <!-- TẦNG 1 -->
+                        <Border Background="#F5F5F5" CornerRadius="40,40,12,12" Padding="20,40,20,30" Margin="10">
+                            <StackPanel>
+                                <TextBlock Text="TẦNG DƯỚI" FontWeight="Bold" Foreground="#888" HorizontalAlignment="Center" Margin="0,0,0,10" 
+                                           Visibility="{Binding CoHaiTang, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <ItemsControl ItemsSource="{Binding DanhSachGheTang1}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="{Binding SoCotGheTang1}" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.ChonGheCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent" BorderThickness="0" Padding="0" Margin="8,12">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <!-- Thiết kế ghế -->
+                                                            <Grid Width="42" Height="46" Background="Transparent">
+                                                                <!-- Lưng ghế -->
+                                                                <Border Width="32" Height="24" VerticalAlignment="Top" 
+                                                                        BorderBrush="{Binding MauVien}" BorderThickness="2" 
+                                                                        CornerRadius="6,6,2,2" Background="{Binding MauNen}"/>
+                                                                <!-- Đệm ngồi -->
+                                                                <Border Width="34" Height="12" VerticalAlignment="Bottom" Margin="0,0,0,6" 
+                                                                        BorderBrush="{Binding MauVien}" BorderThickness="2" 
+                                                                        CornerRadius="4" Background="{Binding MauNen}"/>
+                                                                <!-- Tay vịn trái -->
+                                                                <Border Width="6" Height="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,8" 
+                                                                        BorderBrush="{Binding MauVien}" BorderThickness="2" 
+                                                                        CornerRadius="3" Background="{Binding MauNen}"/>
+                                                                <!-- Tay vịn phải -->
+                                                                <Border Width="6" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,8" 
+                                                                        BorderBrush="{Binding MauVien}" BorderThickness="2" 
+                                                                        CornerRadius="3" Background="{Binding MauNen}"/>
+                                                                        
+                                                                <!-- Text / Icon -->
+                                                                <TextBlock Text="{Binding TenGhe}" HorizontalAlignment="Center" VerticalAlignment="Top" 
+                                                                           Margin="0,5,0,0" FontSize="11" FontWeight="Bold" Foreground="{Binding MauChu}">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding DaDat}" Value="True">
+                                                                                    <Setter Property="Text" Value="✕"/>
+                                                                                    <Setter Property="FontSize" Value="14"/>
+                                                                                    <Setter Property="Margin" Value="0,2,0,0"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding DuocChon}" Value="True">
+                                                                                    <Setter Property="Text" Value="✓"/>
+                                                                                    <Setter Property="FontSize" Value="12"/>
+                                                                                    <Setter Property="Margin" Value="0,4,0,0"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                
+                                                <Style.Triggers>
+                                                    <!-- Lối đi / Ghế ẩn -->
+                                                    <DataTrigger Binding="{Binding IsAisle}" Value="True">
+                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsHidden}" Value="True">
+                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                    </DataTrigger>
+                                                    
+                                                    <!-- Ghế đã đặt (Không bán) -->
+                                                    <DataTrigger Binding="{Binding DaDat}" Value="True">
+                                                        <Setter Property="Cursor" Value="No"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- TẦNG 2 -->
+                        <Border Background="#F5F5F5" CornerRadius="40,40,12,12" Padding="20,40,20,30" Margin="10"
+                                Visibility="{Binding CoHaiTang, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="TẦNG TRÊN" FontWeight="Bold" Foreground="#888" HorizontalAlignment="Center" Margin="0,0,0,10" />
+                                <ItemsControl ItemsSource="{Binding DanhSachGheTang2}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="{Binding SoCotGheTang2}" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <!-- Reusing ItemTemplate -->
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ChonGheCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="Transparent" BorderThickness="0" Padding="0" Margin="8,12">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Grid Width="42" Height="46" Background="Transparent">
+                                                                        <Border Width="32" Height="24" VerticalAlignment="Top" BorderBrush="{Binding MauVien}" BorderThickness="2" CornerRadius="6,6,2,2" Background="{Binding MauNen}"/>
+                                                                        <Border Width="34" Height="12" VerticalAlignment="Bottom" Margin="0,0,0,6" BorderBrush="{Binding MauVien}" BorderThickness="2" CornerRadius="4" Background="{Binding MauNen}"/>
+                                                                        <Border Width="6" Height="16" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,8" BorderBrush="{Binding MauVien}" BorderThickness="2" CornerRadius="3" Background="{Binding MauNen}"/>
+                                                                        <Border Width="6" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,8" BorderBrush="{Binding MauVien}" BorderThickness="2" CornerRadius="3" Background="{Binding MauNen}"/>
+                                                                        <TextBlock Text="{Binding TenGhe}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,4,0,0" FontSize="11" FontWeight="Bold" Foreground="{Binding MauChu}"/>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsHidden}" Value="True">
+                                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DaDat}" Value="True">
+                                                                <Setter Property="Cursor" Value="No"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+
+        <!-- Bảng thanh toán (Dialog Overlay) -->
+        <Grid Background="#B2000000" Visibility="{Binding IsThanhToanOpen, Converter={StaticResource BoolToVisibilityConverter}}">
+            <materialDesign:Card Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" UniformCornerRadius="12" Padding="24">
+                <StackPanel>
+                    <TextBlock Text="THANH TOÁN VÉ XE" FontSize="20" FontWeight="Bold" Foreground="#1a2f5a" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <TextBlock Text="TỔNG CẦN THANH TOÁN: " FontSize="15" FontWeight="SemiBold" Foreground="#666" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ChuyenDuocChon.GiaVeText}" FontSize="18" FontWeight="Bold" Foreground="#388E3C" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <TextBlock Text="Hình thức thanh toán:" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <RadioButton Content="Tiền mặt" GroupName="PayMethod" IsChecked="{Binding LaTienMat}" Margin="0,0,16,0"/>
+                        <RadioButton Content="Chuyển khoản" GroupName="PayMethod"/>
+                    </StackPanel>
+                    
+                    <StackPanel Visibility="{Binding LaTienMat, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBox materialDesign:HintAssist.Hint="Tiền khách đưa (VNĐ)" 
+                                 Text="{Binding TienKhachDua, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
+                                 Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="0,0,0,16"/>
+                        
+                        <TextBlock Text="Tiền thừa trả khách:" Foreground="#666" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TienThua, StringFormat={}{0:N0} đ}" FontSize="18" FontWeight="Bold" Foreground="#D32F2F" Margin="0,0,0,24"/>
+                    </StackPanel>
+                    
+                    <StackPanel Visibility="{Binding LaTienMat, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" Margin="0,0,0,24">
+                        <TextBlock Text="Vui lòng yêu cầu khách quét mã QR hoặc chuyển khoản vào số tài khoản của công ty." TextWrapping="Wrap" Foreground="#00796B"/>
+                    </StackPanel>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="HỦY BỎ" Command="{Binding HuyThanhToanCommand}" Style="{StaticResource MaterialDesignOutlinedButton}" Foreground="#666" BorderBrush="#ccc"/>
+                        <Button Grid.Column="2" Content="ĐẶT VÉ" Command="{Binding XacNhanThanhToanCommand}" Style="{StaticResource MaterialDesignRaisedButton}" Background="#1a2f5a" BorderThickness="0"/>
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</UserControl>

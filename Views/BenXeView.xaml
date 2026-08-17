@@ -1,0 +1,95 @@
+<UserControl x:Class="QuanLyBanVeXeKhach.Views.BenXeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Background="#F0F2F5">
+
+    <Grid Margin="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Form nhập liệu -->
+        <materialDesign:Card Grid.Column="0" Padding="20" Margin="0,0,16,0" UniformCornerRadius="12">
+            <StackPanel>
+                <TextBlock Text="Thông Tin Bến Xe" FontSize="20" FontWeight="Bold" Margin="0,0,0,16"/>
+                
+                <TextBox Text="{Binding BenXeDangSua.TenBenXe, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Tên bến xe" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,16"/>
+                         
+                <TextBox Text="{Binding BenXeDangSua.TinhThanh, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Tỉnh thành" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,16"/>
+                
+                <TextBox Text="{Binding BenXeDangSua.DiaChi, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Địa chỉ chi tiết" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,16" TextWrapping="Wrap" AcceptsReturn="True" Height="60"/>
+                         
+                <CheckBox Content="Đang hoạt động" IsChecked="{Binding BenXeDangSua.TrangThai}" Margin="0,0,0,24"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Button Grid.Row="0" Grid.Column="0" Command="{Binding ThemCommand}" Content="Thêm" Background="#4CAF50" BorderBrush="#4CAF50"/>
+                    <Button Grid.Row="0" Grid.Column="2" Command="{Binding SuaCommand}" Content="Lưu Sửa" Background="#2196F3" BorderBrush="#2196F3"/>
+                    <Button Grid.Row="2" Grid.Column="0" Command="{Binding XoaCommand}" Content="Xóa" Style="{StaticResource MaterialDesignOutlinedButton}" Foreground="#F44336" BorderBrush="#F44336"/>
+                    <Button Grid.Row="2" Grid.Column="2" Command="{Binding ResetCommand}" Content="Làm Mới" Style="{StaticResource MaterialDesignFlatButton}"/>
+                </Grid>
+            </StackPanel>
+        </materialDesign:Card>
+
+        <!-- Danh sách -->
+        <materialDesign:Card Grid.Column="1" Padding="0" UniformCornerRadius="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="16,16,16,8">
+                    <materialDesign:PackIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" Foreground="#757575"/>
+                    <TextBox Text="{Binding TuKhoa, UpdateSourceTrigger=PropertyChanged}"
+                             materialDesign:HintAssist.Hint="Tìm kiếm bến xe..." Width="300" Margin="8,0,0,0"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding DanhSachBenXe}" SelectedItem="{Binding BenXeDuocChon}"
+                          AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                          HeadersVisibility="All" Background="White" RowHeight="40">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Bến" Binding="{Binding MaBenXe}"/>
+                        <DataGridTextColumn Header="Tên Bến Xe" Binding="{Binding TenBenXe}"/>
+                        <DataGridTextColumn Header="Tỉnh Thành" Binding="{Binding TinhThanh}"/>
+                        <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding DiaChi}" Width="*"/>
+                        <DataGridTemplateColumn Header="Trạng Thái" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="8" Padding="12,4" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#4CAF50"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TrangThai}" Value="False">
+                                                        <Setter Property="Background" Value="#F44336"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding TrangThaiText}" Foreground="White" FontWeight="SemiBold" FontSize="12"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

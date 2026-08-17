@@ -1,0 +1,168 @@
+<UserControl x:Class="QuanLyBanVeXeKhach.Views.ChuyenXeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tiêu đề + Tìm kiếm -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="📅  Quản Lý Lịch Trình Chuyến Xe" FontSize="22" FontWeight="Bold"
+                       Foreground="#1a2f5a" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Width="220"
+                     materialDesign:HintAssist.Hint="🔍 Tìm kiếm..."
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Text="{Binding Keyword, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Button Grid.Column="2" Command="{Binding ThemMoiCommand}"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Background="#1a2f5a" Foreground="White" BorderThickness="0"
+                    materialDesign:ButtonAssist.CornerRadius="8">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                    <TextBlock Text="Thêm Chuyến" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Nội dung split: DataGrid + Form -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto" MinWidth="340"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- DataGrid -->
+            <materialDesign:Card Grid.Column="0" Padding="0" UniformCornerRadius="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border Background="#1a2f5a" CornerRadius="12,12,0,0" Padding="16,10">
+                        <TextBlock Text="Danh Sách Chuyến Xe" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
+                    </Border>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding DanhSach}"
+                              SelectedItem="{Binding DuocChon}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserResizeRows="False" HeadersVisibility="Column"
+                              Style="{StaticResource MaterialDesignDataGrid}"
+                              RowBackground="White" AlternatingRowBackground="#F8F9FF"
+                              BorderThickness="0" GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="#EEE">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tuyến Xe"   Binding="{Binding TenTuyen}"  Width="*"   ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Xuất Bến"   Binding="{Binding ThoiGianXuatBen, StringFormat=\{0:dd/MM HH:mm\}}" Width="110" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Xe"         Binding="{Binding BienSo}"    Width="100" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Giá Vé"     Binding="{Binding GiaVeText}"  Width="100" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Ghế Trống"  Binding="{Binding SoGheTrong}" Width="90" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTemplateColumn Header="Trạng Thái" Width="110">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{Binding TrangThaiText, Converter={StaticResource StatusToColorConverter}}"
+                                                CornerRadius="10" Padding="8,3" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding TrangThaiText}" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- Action buttons -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="12,8" HorizontalAlignment="Left">
+                        <Button Command="{Binding BatDauChayCommand}" Margin="0,0,8,0"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Foreground="#388E3C" BorderBrush="#388E3C" Content="▶ Bắt Đầu"/>
+                        <Button Command="{Binding HoanThanhCommand}" Margin="0,0,8,0"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Foreground="#1976D2" BorderBrush="#1976D2" Content="✓ Hoàn Thành"/>
+                        <Button Command="{Binding HuyChuyenCommand}"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Foreground="#C62828" BorderBrush="#C62828" Content="✕ Hủy Chuyến"/>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:Card>
+
+            <!-- Form thêm/sửa -->
+            <materialDesign:Card Grid.Column="2" Padding="20" UniformCornerRadius="12"
+                                 Visibility="{Binding DangSua, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel>
+                    <TextBlock Text="{Binding DuocChon, Converter={StaticResource BoolToVisibilityConverter},
+                               ConverterParameter=Invert, TargetNullValue='Thêm Chuyến Mới'}"
+                               FontSize="16" FontWeight="Bold" Foreground="#1a2f5a" Margin="0,0,0,16"/>
+
+                    <ComboBox ItemsSource="{Binding DanhSachTuyen}"
+                              SelectedItem="{Binding TuyenChon}"
+                              materialDesign:HintAssist.Hint="Tuyến xe (*)"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              Margin="0,0,0,12">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding TenTuyen}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding ThongTin}" FontSize="11" Foreground="#666"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <ComboBox ItemsSource="{Binding DanhSachXe}"
+                              SelectedItem="{Binding XeChon}"
+                              DisplayMemberPath="ThongTin"
+                              materialDesign:HintAssist.Hint="Xe (*)"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              Margin="0,0,0,12"/>
+
+                    <ComboBox ItemsSource="{Binding DanhSachTaiXe}"
+                              SelectedItem="{Binding TaiXeChon}"
+                              DisplayMemberPath="HoTen"
+                              materialDesign:HintAssist.Hint="Tài xế (*)"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              Margin="0,0,0,12"/>
+
+                    <DatePicker SelectedDate="{Binding NgayXuatBen}"
+                                materialDesign:HintAssist.Hint="Ngày xuất bến (*)"
+                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                Margin="0,0,0,12"/>
+
+                    <TextBox materialDesign:HintAssist.Hint="Giờ xuất bến (HH:mm) (*)"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding GioXuatBen}" Margin="0,0,0,12"/>
+
+                    <TextBox materialDesign:HintAssist.Hint="Giờ dự kiến đến (HH:mm)"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding GioVe}" Margin="0,0,0,12"/>
+
+                    <TextBox materialDesign:HintAssist.Hint="Giá vé (VNĐ) (*)"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding GiaVeText}" Margin="0,0,0,12"/>
+
+                    <TextBox materialDesign:HintAssist.Hint="Ghi chú"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding GhiChu}" Margin="0,0,0,20" MaxLines="3"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Command="{Binding HuyFormCommand}" Margin="0,0,10,0"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Content="Hủy"/>
+                        <Button Command="{Binding LuuCommand}"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Background="#1a2f5a" Foreground="White" BorderThickness="0"
+                                Content="💾 Lưu"/>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,110 @@
+<Window x:Class="QuanLyBanVeXeKhach.Views.DangNhapView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Đăng Nhập — Quản Lý Bán Vé Xe Khách"
+        Height="560" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <Style x:Key="InputBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="White"/>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="16" ClipToBounds="True">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1e3c72" Offset="0.0"/>
+                <GradientStop Color="#2a5298" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid>
+            <!-- Hiệu ứng vòng tròn nền -->
+            <Ellipse Width="300" Height="300" Fill="#22FFFFFF" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-80,-80,0"/>
+            <Ellipse Width="200" Height="200" Fill="#11FFFFFF" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-60,0,0,-60"/>
+
+            <StackPanel VerticalAlignment="Center" Margin="48,0">
+                <!-- Logo & Title -->
+                <Border Background="#33FFFFFF" CornerRadius="50" Width="90" Height="90"
+                        HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="BusDoubleDecker" Width="52" Height="52"
+                                             Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+
+                <TextBlock Text="QUẢN LÝ BÁN VÉ XE KHÁCH"
+                           Foreground="White" FontSize="18" FontWeight="Bold"
+                           HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                <TextBlock Text="Vui lòng đăng nhập để tiếp tục"
+                           Foreground="#AAFFFFFF" FontSize="13"
+                           HorizontalAlignment="Center" Margin="0,0,0,36"/>
+
+                <!-- Tên đăng nhập -->
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Tên đăng nhập"
+                         materialDesign:HintAssist.Foreground="#AAFFFFFF"
+                         Text="{Binding TenDangNhap, UpdateSourceTrigger=PropertyChanged}"
+                         Foreground="White" BorderBrush="#55FFFFFF" Margin="0,0,0,16"
+                         Height="48" FontSize="14"
+                         KeyDown="Input_KeyDown">
+                    <materialDesign:TextFieldAssist.LeadingIcon>Person</materialDesign:TextFieldAssist.LeadingIcon>
+                </TextBox>
+
+                <!-- Mật khẩu -->
+                <PasswordBox x:Name="pbPass"
+                             Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                             materialDesign:HintAssist.Hint="Mật khẩu"
+                             materialDesign:HintAssist.Foreground="#AAFFFFFF"
+                             Foreground="White" BorderBrush="#55FFFFFF" Margin="0,0,0,8"
+                             Height="48" FontSize="14"
+                             KeyDown="Input_KeyDown">
+                    <materialDesign:TextFieldAssist.LeadingIcon>Lock</materialDesign:TextFieldAssist.LeadingIcon>
+                </PasswordBox>
+
+                <TextBlock Text="{Binding ThongBaoLoi}"
+                           Foreground="#FF6B6B" FontSize="13" TextWrapping="Wrap"
+                           HorizontalAlignment="Center" Margin="0,0,0,16"
+                           Visibility="{Binding CoLoi, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                <!-- Nút Đăng Nhập -->
+                <Button Content="ĐĂNG NHẬP"
+                        x:Name="btnDangNhap"
+                        Click="btnDangNhap_Click"
+                        Height="48" FontSize="15" FontWeight="Bold"
+                        Background="#FF8C00" Foreground="White"
+                        BorderThickness="0"
+                        materialDesign:ButtonAssist.CornerRadius="8"
+                        Margin="0,8,0,12">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FFA040"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <TextBlock Text="© 2025 Nhóm 7 — .NET WPF MVVM"
+                           Foreground="#66FFFFFF" FontSize="11"
+                           HorizontalAlignment="Center" Margin="0,16,0,0"/>
+            </StackPanel>
+
+            <!-- Nút đóng -->
+            <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0"
+                    Width="32" Height="32" Background="Transparent" BorderThickness="0"
+                    Foreground="White" Content="✕" FontSize="16"
+                    Click="btnDong_Click"/>
+        </Grid>
+    </Border>
+</Window>

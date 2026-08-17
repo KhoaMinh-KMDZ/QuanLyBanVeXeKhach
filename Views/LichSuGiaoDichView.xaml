@@ -1,0 +1,33 @@
+<UserControl x:Class="QuanLyBanVeXeKhach.Views.LichSuGiaoDichView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Background="#F0F2F5">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <materialDesign:PackIcon Kind="History" Width="32" Height="32" Foreground="#1976D2" VerticalAlignment="Center" Margin="0,0,12,0"/>
+            <TextBlock Text="LỊCH SỬ GIAO DỊCH" FontSize="24" FontWeight="Bold" Foreground="#333" VerticalAlignment="Center"/>
+            <Button Command="{Binding TaiLaiCommand}" Margin="20,0,0,0" Style="{StaticResource MaterialDesignOutlinedButton}" Content="Tải lại" materialDesign:ButtonAssist.CornerRadius="8"/>
+        </StackPanel>
+
+        <materialDesign:Card Grid.Row="1" Padding="0" UniformCornerRadius="12">
+            <DataGrid ItemsSource="{Binding DanhSachLichSu}" 
+                      AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" 
+                      HeadersVisibility="All" Background="White" RowHeight="40">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã NK" Binding="{Binding MaNhatKy}" Width="80" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                    <DataGridTextColumn Header="Thời Gian" Binding="{Binding ThoiGianText}" Width="160" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                    <DataGridTextColumn Header="Nhân Viên" Binding="{Binding TenNhanVien}" Width="180" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                    <DataGridTextColumn Header="Hành Động" Binding="{Binding HanhDong}" Width="150" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                    <DataGridTextColumn Header="Ghi Chú" Binding="{Binding GhiChu}" Width="*" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

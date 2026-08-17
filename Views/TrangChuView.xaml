@@ -1,0 +1,141 @@
+<UserControl x:Class="QuanLyBanVeXeKhach.Views.TrangChuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28">
+
+            <!-- Header chào mừng -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="{Binding ChaoMung}" FontSize="26" FontWeight="Bold"
+                               Foreground="#1a2f5a"/>
+                    <TextBlock Text="{Binding NgayHienTai}" FontSize="14" Foreground="#666"
+                               Margin="0,4,0,0" TextOptions.TextFormattingMode="Ideal"/>
+                </StackPanel>
+                <Button Grid.Column="1" Command="{Binding LamMoiCommand}"
+                        Style="{StaticResource MaterialDesignOutlinedButton}"
+                        Content="⟳ Làm mới" VerticalAlignment="Center"
+                        materialDesign:ButtonAssist.CornerRadius="8"/>
+            </Grid>
+
+            <!-- Stats Cards -->
+            <UniformGrid Columns="4" Margin="0,0,0,24">
+                <!-- Vé hôm nay -->
+                <materialDesign:Card Margin="0,0,10,0" Padding="20" UniformCornerRadius="12">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Vé Bán Hôm Nay" FontSize="13" Foreground="#666"/>
+                            <Border Grid.Column="1" Background="#E3F2FD" CornerRadius="20" Width="40" Height="40">
+                                <materialDesign:PackIcon Kind="TicketConfirmation" Width="22" Height="22"
+                                                         Foreground="#1976D2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="{Binding SoVeHomNay}" FontSize="38" FontWeight="Bold"
+                                   Foreground="#1976D2" Margin="0,8,0,0"/>
+                        <TextBlock Text="vé" FontSize="13" Foreground="#888"/>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Doanh Thu -->
+                <materialDesign:Card Margin="5,0,5,0" Padding="20" UniformCornerRadius="12">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Doanh Thu Hôm Nay" FontSize="13" Foreground="#666"/>
+                            <Border Grid.Column="1" Background="#E8F5E9" CornerRadius="20" Width="40" Height="40">
+                                <materialDesign:PackIcon Kind="CurrencyUsd" Width="22" Height="22"
+                                                         Foreground="#388E3C" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="{Binding DoanhThuText}" FontSize="26" FontWeight="Bold"
+                                   Foreground="#388E3C" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                        <TextBlock Text="doanh thu" FontSize="13" Foreground="#888"/>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Chuyến sắp chạy -->
+                <materialDesign:Card Margin="5,0,5,0" Padding="20" UniformCornerRadius="12">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Chuyến Sắp Chạy" FontSize="13" Foreground="#666"/>
+                            <Border Grid.Column="1" Background="#FFF3E0" CornerRadius="20" Width="40" Height="40">
+                                <materialDesign:PackIcon Kind="BusStop" Width="22" Height="22"
+                                                         Foreground="#F57C00" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="{Binding SoChuyenSapChay}" FontSize="38" FontWeight="Bold"
+                                   Foreground="#F57C00" Margin="0,8,0,0"/>
+                        <TextBlock Text="chuyến" FontSize="13" Foreground="#888"/>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Đang chạy -->
+                <materialDesign:Card Margin="10,0,0,0" Padding="20" UniformCornerRadius="12">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Đang Trên Đường" FontSize="13" Foreground="#666"/>
+                            <Border Grid.Column="1" Background="#FCE4EC" CornerRadius="20" Width="40" Height="40">
+                                <materialDesign:PackIcon Kind="Bus" Width="22" Height="22"
+                                                         Foreground="#C62828" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="{Binding SoChuyenDangChay}" FontSize="38" FontWeight="Bold"
+                                   Foreground="#C62828" Margin="0,8,0,0"/>
+                        <TextBlock Text="chuyến đang chạy" FontSize="13" Foreground="#888"/>
+                    </StackPanel>
+                </materialDesign:Card>
+            </UniformGrid>
+
+            <!-- Danh sách chuyến sắp khởi hành -->
+            <materialDesign:Card Padding="0" UniformCornerRadius="12">
+                <StackPanel>
+                    <Border Background="#1a2f5a" CornerRadius="12,12,0,0" Padding="20,14">
+                        <TextBlock Text="🚌  Các Chuyến Sắp Khởi Hành (3 ngày tới)"
+                                   Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                    </Border>
+                    <DataGrid ItemsSource="{Binding ChuyenSapChay}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserResizeRows="False" HeadersVisibility="Column"
+                              Style="{StaticResource MaterialDesignDataGrid}"
+                              RowBackground="White" AlternatingRowBackground="#F8F9FF"
+                              BorderThickness="0" GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="#EEE"
+                              Margin="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tuyến Xe"     Binding="{Binding TenTuyen}"   Width="*"   ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Điểm Đi"      Binding="{Binding DiemDi}"     Width="120" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Điểm Đến"     Binding="{Binding DiemDen}"    Width="120" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Xuất Bến"     Binding="{Binding ThoiGianXuatBen, StringFormat=\{0:dd/MM/yyyy HH:mm\}}" Width="150" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Xe"           Binding="{Binding BienSo}"     Width="110" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Tài Xế"       Binding="{Binding TenTaiXe}"   Width="140" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Ghế Trống"    Binding="{Binding SoGheTrong}" Width="90"  ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                            <DataGridTextColumn Header="Giá Vé"       Binding="{Binding GiaVeText}"  Width="100" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </materialDesign:Card>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
